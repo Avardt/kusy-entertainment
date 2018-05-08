@@ -1,0 +1,249 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit6.h"
+#include "Unit7.h"
+#include "mmsystem.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm6 *Form6;
+int liczby[1000];
+bool gra_rozpoczeta=false;
+int ile=0;
+int licznik;
+
+void sekwencja()
+{
+     Application->ProcessMessages(); Sleep(1000);
+
+     Form6->z1->Picture->LoadFromFile("poziom3/img/kolko.bmp");
+     Form6->z2->Picture->LoadFromFile("poziom3/img/kolko.bmp");
+     Form6->z3->Picture->LoadFromFile("poziom3/img/kolko.bmp");
+
+     Form6->z1->Enabled=false;
+     Form6->z2->Enabled=false;
+     Form6->z3->Enabled=false;
+
+     Form6->start3->Caption="Nastepna runda za 2";
+     Application->ProcessMessages(); Sleep(1000);
+     Form6->start3->Caption="Nastepna runda za 1";
+     Application->ProcessMessages(); Sleep(1000);
+
+     Form6->start3->Caption="Zapamietaj sekwencje";
+     Application->ProcessMessages();Sleep(1000);
+
+     ile++;
+
+     for( int i=0;i<ile;i++ )
+     {
+      switch(liczby[i])
+      {
+       case 1:
+       {
+       sndPlaySound("poziom3/snd/d1.wav", SND_ASYNC);
+       Form6->z1a->Visible=true;
+       Application->ProcessMessages();Sleep(100);
+       Form6->z1a->Visible=false;
+       }break;
+
+       case 2:
+       {
+       sndPlaySound("poziom3/snd/d3.wav", SND_ASYNC);
+       Form6->z2a->Visible=true;
+       Application->ProcessMessages();Sleep(100);
+       Form6->z2a->Visible=false;
+       }break;
+
+       case 3:
+       {
+       sndPlaySound("poziom3/snd/d2.wav", SND_ASYNC);
+       Form6->z3a->Visible=true;
+       Application->ProcessMessages();Sleep(100);
+       Form6->z3a->Visible=false;
+       }break;
+      }       //koniec switcha
+      Application->ProcessMessages(); Sleep(1200);
+      Form6->z1a->Visible=false;
+      Form6->z2a->Visible=false;
+      Form6->z3a->Visible=false;
+      Application->ProcessMessages();Sleep(100);
+     }         //for
+     Form6->z1a->Visible=false;
+     Form6->z2a->Visible=false;
+     Form6->z3a->Visible=false;
+     Form6->z1->Enabled=true;
+     Form6->z2->Enabled=true;
+     Form6->z3->Enabled=true;
+     Form6->start3->Caption="Powtorz Sekwencje";
+     licznik=0;
+}
+
+//---------------------------------------------------------------------------
+__fastcall TForm6::TForm6(TComponent* Owner)
+        : TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm6::start3Click(TObject *Sender)
+{
+        randomize();
+        if(gra_rozpoczeta==false && ile>2)
+        {
+            KoniecPoziomu3->Visible=true;
+        }
+        ile=0;
+        licznik=1;
+        for(int i=0;i<1000;i++)
+        {
+          liczby[i]=random(3)+1;
+        }
+         gra_rozpoczeta=true;
+         opis->Visible=false;
+         sndPlaySound("poziom3/snd/start.wav",SND_ASYNC);
+         sekwencja();
+         ile=1;
+         licznik=0;
+
+
+
+}
+//---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+void __fastcall TForm6::z1Click(TObject *Sender)
+{
+   if(gra_rozpoczeta==true)
+   {
+    licznik++;
+    if(liczby[licznik-1]!=1)
+    {
+     ile--;
+     if(ile>=7) { KoniecPoziomu3->Visible=true; }
+     start3->Caption="Skucha! Twoj wynik: "+IntToStr(ile);
+     sndPlaySound("poziom3/snd/koniec.wav",SND_ASYNC);
+     gra_rozpoczeta=false;
+     ile=0;
+     licznik=1;
+    }      //if2
+    if(licznik==ile)
+    {
+      start3->Caption="Doskonale!";
+      sekwencja();
+    }  //if2
+   }       //if1
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm6::z3Click(TObject *Sender)
+{
+   if(gra_rozpoczeta==true)
+   {
+    licznik++;
+    if(liczby[licznik-1]!=3)
+    {
+     ile--;
+          if(ile>=7) { KoniecPoziomu3->Visible=true; }
+     start3->Caption="Skucha! Twoj wynik: "+IntToStr(ile);
+     sndPlaySound("poziom3/snd/koniec.wav",SND_ASYNC);
+     gra_rozpoczeta=false;
+     ile=0;
+     licznik=1;
+    }      //if2
+    if(licznik==ile)
+    {
+      start3->Caption="Doskonale!";
+      sekwencja();
+    }  //if2
+   }       //if1
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm6::z2Click(TObject *Sender)
+{
+   if(gra_rozpoczeta==true)
+   {
+    licznik++;
+    if(liczby[licznik-1]!=2)
+    {
+     ile--;
+          if(ile>=7) { KoniecPoziomu3->Visible=true; }
+     start3->Caption="Skucha! Twoj wynik: "+IntToStr(ile);
+     sndPlaySound("poziom3/snd/koniec.wav",SND_ASYNC);
+     gra_rozpoczeta=false;
+     ile=0;
+     licznik=1;
+    }      //if2
+    if(licznik==ile)
+    {
+      start3->Caption="Doskonale!";
+      sekwencja();
+    }  //if2
+   }       //if1
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm6::z1MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z1->Picture->LoadFromFile("poziom3/img/kolkopietrek.bmp");
+        sndPlaySound("poziom3/snd/d1.wav",SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm6::z1MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z1->Picture->LoadFromFile("poziom3/img/kolko.bmp");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm6::z2MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z2->Picture->LoadFromFile("poziom3/img/kolkokorbal.bmp");
+        sndPlaySound("poziom3/snd/d3.wav",SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm6::z2MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z2->Picture->LoadFromFile("poziom3/img/kolko.bmp");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm6::z3MouseDown(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z3->Picture->LoadFromFile("poziom3/img/kolkodszefo.bmp");
+        sndPlaySound("poziom3/snd/d2.wav",SND_ASYNC);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm6::z3MouseUp(TObject *Sender, TMouseButton Button,
+      TShiftState Shift, int X, int Y)
+{
+        z3->Picture->LoadFromFile("poziom3/img/kolko.bmp");
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TForm6::KoniecPoziomu3Click(TObject *Sender)
+{
+      Form6->Visible=false;
+      Form7->Visible=true;
+}
+//---------------------------------------------------------------------------
+
